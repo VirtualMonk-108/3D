@@ -40,7 +40,7 @@ const matcapTexture6 = textureLoader.load('/textures/matcaps/6.png')
 const matcapTexture7 = textureLoader.load('/textures/matcaps/7.png')
 const matcapTexture8 = textureLoader.load('/textures/matcaps/8.png')
 
-
+const items = [];
 
 /**
  * Fonts
@@ -49,8 +49,7 @@ const fontLoader = new FontLoader()
 
 fontLoader.load(
     '/fonts/helvetiker_regular.typeface.json',
-    (font) =>
-    {
+    (font) => {
         const textGeometry = new TextGeometry(
             'Yauvan',
             {
@@ -72,103 +71,73 @@ fontLoader.load(
         const text = new THREE.Mesh(textGeometry, textMaterial)
         scene.add(text)
 
-        console.time('donuts')
-        const donutGeometry = new THREE.TorusGeometry(0.3, 0.2, 20, 45)
-        const donutMaterial = new THREE.MeshMatcapMaterial({ matcap: matcapTexture8 })
-        // create 100 dounuts
-        for(let i = 0; i < 100; i++)
-        {
+        // 100 cubes that will move around the screen store in array outside for loop
 
-            const donut = new THREE.Mesh(donutGeometry, donutMaterial)
-
-            donut.position.x = (Math.random() - 0.5) * 10
-            donut.position.y = (Math.random() - 0.5) * 10
-            donut.position.z = (Math.random() - 0.5) * 10
-
-            donut.rotation.x = Math.random() * Math.PI
-            donut.rotation.y = Math.random() * Math.PI
-
-            const scale = Math.random()
-            donut.scale.set(scale, scale, scale)
-
-            scene.add(donut)
-        }
-        console.timeEnd('donuts')
-
-        console.time('cubes')
-        const cubeGeometry = new THREE.BoxGeometry(0.3, 0.3, 0.3)
-        const cubeMaterial = new THREE.MeshMatcapMaterial({ matcap: matcapTexture7 })
-
-        const screenWidth = window.innerWidth
-        const screenHeight = window.innerHeight
-
-        for(let i = 0; i < 100; i++)
-        {
-            const cube = new THREE.Mesh(cubeGeometry, cubeMaterial)
-
-            cube.position.x = (Math.random() - 0.5) * screenWidth
-            cube.position.y = (Math.random() - 0.5) * screenHeight
+        for (let i = 0; i < 100; i++) {
+            const cube = new THREE.Mesh(
+                new THREE.BoxGeometry(0.1, 0.1, 0.1),
+                new THREE.MeshMatcapMaterial({matcap: matcapTexture5})
+            )
+            cube.position.x = (Math.random() - 0.5) * 10
+            cube.position.y = (Math.random() - 0.5) * 10
             cube.position.z = (Math.random() - 0.5) * 10
 
-            cube.rotation.x = Math.random() * Math.PI
-            cube.rotation.y = Math.random() * Math.PI
-
-            const scale = Math.random()
-            cube.scale.set(scale, scale, scale)
+            // Assign a random velocity
+            cube.velocity = new THREE.Vector3(
+                (Math.random() - 0.5) * 0.04,
+                (Math.random() - 0.5) * 0.04,
+                (Math.random() - 0.5) * 0.04
+            );
 
             scene.add(cube)
+            items.push(cube)
         }
-        console.timeEnd('cubes')
+        // 100 pyramids like the ones above store in array outside for loop
+        for (let i = 0; i < 100; i++) {
+            const pyramid = new THREE.Mesh(
+                new THREE.ConeGeometry(0.1, 0.1, 4),
+                new THREE.MeshMatcapMaterial({matcap: matcapTexture8})
+            )
+            pyramid.position.x = (Math.random() - 0.5) * 10
+            pyramid.position.y = (Math.random() - 0.5) * 10
+            pyramid.position.z = (Math.random() - 0.5) * 10
 
+            // Assign a random velocity
+            pyramid.velocity = new THREE.Vector3(
+                (Math.random() - 0.5) * 0.02,
+                (Math.random() - 0.5) * 0.02,
+                (Math.random() - 0.5) * 0.02
+            );
 
-        // create 100 spheres
-        console.time('spheres')
-        const sphereGeometry = new THREE.SphereGeometry(0.3, 32, 32)
-        const sphereMaterial = new THREE.MeshMatcapMaterial({ matcap: matcapTexture6 })
+            scene.add(pyramid)
+            items.push(pyramid)
 
-        for(let i = 0; i < 100; i++)
-        {
-            const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial)
+        }
 
+        // 100 spheres like the ones above
+        for (let i = 0; i < 100; i++) {
+            const sphere = new THREE.Mesh(
+                new THREE.SphereGeometry(0.1, 32, 32),
+                new THREE.MeshMatcapMaterial({matcap: matcapTexture2})
+            )
             sphere.position.x = (Math.random() - 0.5) * 10
             sphere.position.y = (Math.random() - 0.5) * 10
             sphere.position.z = (Math.random() - 0.5) * 10
 
-            sphere.rotation.x = Math.random() * Math.PI
-            sphere.rotation.y = Math.random() * Math.PI
+            // Assign a random velocity
+            sphere.velocity = new THREE.Vector3(
+                (Math.random() - 0.5) * 0.01,
+                (Math.random() - 0.5) * 0.01,
+                (Math.random() - 0.5) * 0.01
+            );
 
-            const scale = Math.random()
-            sphere.scale.set(scale, scale, scale)
 
             scene.add(sphere)
+            items.push(sphere)
         }
-        console.timeEnd('spheres')
 
-        // create 100 icosahedrons
-        console.time('icosahedrons')
-        const icosahedronGeometry = new THREE.IcosahedronGeometry(0.3, 0)
-        const icosahedronMaterial = new THREE.MeshMatcapMaterial({ matcap: matcapTexture3 })
-
-        for(let i = 0; i < 100; i++)
-        {
-            const icosahedron = new THREE.Mesh(icosahedronGeometry, icosahedronMaterial)
-
-            icosahedron.position.x = (Math.random() - 0.5) * 10
-            icosahedron.position.y = (Math.random() - 0.5) * 10
-            icosahedron.position.z = (Math.random() - 0.5) * 10
-
-            icosahedron.rotation.x = Math.random() * Math.PI
-            icosahedron.rotation.y = Math.random() * Math.PI
-
-            const scale = Math.random()
-            icosahedron.scale.set(scale, scale, scale)
-
-            scene.add(icosahedron)
-        }
-        console.timeEnd('icosahedrons')
     }
 
-    
 )
 
 /**
@@ -185,8 +154,7 @@ const sizes = {
     height: window.innerHeight
 }
 
-window.addEventListener('resize', () =>
-{
+window.addEventListener('resize', () => {
     // Update sizes
     sizes.width = window.innerWidth
     sizes.height = window.innerHeight
@@ -204,10 +172,39 @@ window.addEventListener('resize', () =>
  * Camera
  */
 // Base camera
+// Define keyframes and update function
+// Array of THREE.Vector3 for key positions
+const keyframes = [
+    new THREE.Vector3(9, 0, 2),
+    new THREE.Vector3(0, 5, 4),
+    new THREE.Vector3(0, 5, 0),
+    new THREE.Vector3(6, 6, 0),
+    new THREE.Vector3(7, 0, 0),
+    new THREE.Vector3(9, 9, 6),
+  
+];
+
+// Duration for each segment of the journey (in seconds)
+const segmentDuration = 5;
+
+// Function to update camera position
+const updateCameraPosition = (elapsedTime) => {
+    // Determine current segment and alpha (progress through segment)
+    const segmentIndex = Math.floor(elapsedTime / segmentDuration) % keyframes.length;
+    const alpha = (elapsedTime % segmentDuration) / segmentDuration;
+
+    // Determine start and end points for current segment
+    const startPoint = keyframes[segmentIndex];
+    const endPoint = keyframes[(segmentIndex + 1) % keyframes.length];
+
+    // Interpolate position
+    camera.position.lerpVectors(startPoint, endPoint, alpha);
+};
+
 const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 100)
-camera.position.x = 1
-camera.position.y = 1
-camera.position.z = 2
+camera.position.x = -4
+camera.position.y = 4
+camera.position.z = 6
 scene.add(camera)
 
 // Controls
@@ -228,12 +225,32 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
  */
 const clock = new THREE.Clock()
 
-const tick = () =>
-{
+const tick = () => {
+
+    // Update positions
+    items.forEach(item => {
+        item.position.add(item.velocity);
+
+        // Check for boundaries and bounce back
+        const bounds = 5; // Define your boundary size
+        if (item.position.x > bounds || item.position.x < -bounds) {
+            item.velocity.x *= -1;
+        }
+        if (item.position.y > bounds || item.position.y < -bounds) {
+            item.velocity.y *= -1;
+        }
+        if (item.position.z > bounds || item.position.z < -bounds) {
+            item.velocity.z *= -1;
+        }
+    });
+
     const elapsedTime = clock.getElapsedTime()
 
     // Update controls
     controls.update()
+
+        // Update camera position
+        updateCameraPosition(elapsedTime);
 
     // Render
     renderer.render(scene, camera)
