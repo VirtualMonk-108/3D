@@ -67,6 +67,7 @@ fontLoader.load(
         textGeometry.center()
         const textMaterial = new THREE.MeshMatcapMaterial()
         textMaterial.matcap = matcapTexture8
+        textMaterial.flatShading = false
         //textMaterial.wireframe = true
         const text = new THREE.Mesh(textGeometry, textMaterial)
         scene.add(text)
@@ -175,13 +176,12 @@ window.addEventListener('resize', () => {
 // Define keyframes and update function
 // Array of THREE.Vector3 for key positions
 const keyframes = [
-    new THREE.Vector3(9, 0, 2),
-    new THREE.Vector3(0, 5, 4),
-    new THREE.Vector3(0, 5, 0),
-    new THREE.Vector3(6, 6, 0),
-    new THREE.Vector3(7, 0, 0),
-    new THREE.Vector3(9, 9, 6),
-  
+    new THREE.Vector3(3, 2, 5), // Starting from a moderate elevation, looking towards the center
+    new THREE.Vector3(0, 5, 3), // Move up and closer to the center
+    new THREE.Vector3(-3, 3, 0), // Glide to the other side at a diagonal
+    new THREE.Vector3(0, 1, -3), // Lower elevation, moving towards the back
+    new THREE.Vector3(4, 4, 0),  // Move to a higher point on the opposite side
+    new THREE.Vector3(0, 2, 5)   // Return towards the starting point, but at a different angle
 ];
 
 // Duration for each segment of the journey (in seconds)
