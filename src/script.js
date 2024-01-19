@@ -173,33 +173,7 @@ window.addEventListener('resize', () => {
  * Camera
  */
 // Base camera
-// Define keyframes and update function
-// Array of THREE.Vector3 for key positions
-const keyframes = [
-    new THREE.Vector3(3, 2, 5), // Starting from a moderate elevation, looking towards the center
-    new THREE.Vector3(0, 5, 3), // Move up and closer to the center
-    new THREE.Vector3(-3, 3, 0), // Glide to the other side at a diagonal
-    new THREE.Vector3(0, 1, -3), // Lower elevation, moving towards the back
-    new THREE.Vector3(4, 4, 0),  // Move to a higher point on the opposite side
-    new THREE.Vector3(0, 2, 5)   // Return towards the starting point, but at a different angle
-];
 
-// Duration for each segment of the journey (in seconds)
-const segmentDuration = 5;
-
-// Function to update camera position
-const updateCameraPosition = (elapsedTime) => {
-    // Determine current segment and alpha (progress through segment)
-    const segmentIndex = Math.floor(elapsedTime / segmentDuration) % keyframes.length;
-    const alpha = (elapsedTime % segmentDuration) / segmentDuration;
-
-    // Determine start and end points for current segment
-    const startPoint = keyframes[segmentIndex];
-    const endPoint = keyframes[(segmentIndex + 1) % keyframes.length];
-
-    // Interpolate position
-    camera.position.lerpVectors(startPoint, endPoint, alpha);
-};
 
 const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 100)
 camera.position.x = -4
@@ -207,9 +181,19 @@ camera.position.y = 4
 camera.position.z = 6
 scene.add(camera)
 
-// Controls
-const controls = new OrbitControls(camera, canvas)
-controls.enableDamping = true
+
+let mouseX = 0;
+let mouseY = 0;
+const windowHalfX = window.innerWidth / 2;
+const windowHalfY = window.innerHeight / 2;
+
+function onDocumentMouseMove(event) {
+    mouseX = (event.clientX - windowHalfX) / 100;
+    mouseY = (event.clientY - windowHalfY) / 100;
+}
+
+document.addEventListener('mousemove', onDocumentMouseMove, false);
+
 
 /**
  * Renderer
@@ -246,11 +230,13 @@ const tick = () => {
 
     const elapsedTime = clock.getElapsedTime()
 
-    // Update controls
-    controls.update()
+    // Update camera rotation
+    camera.rotation.y += (mouseX - camera.rotation.y) * 0.05;
+    camera.rotation.x += (-mouseY - camera.rotation.x) * 0.05;
+
 
         // Update camera position
-        updateCameraPosition(elapsedTime);
+        //updateCameraPosition(elapsedTime);
 
     // Render
     renderer.render(scene, camera)
@@ -260,3 +246,4 @@ const tick = () => {
 }
 
 tick()
+
