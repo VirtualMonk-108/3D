@@ -9,8 +9,7 @@ import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js'
 /**
  * Base
  */
-// Debug
-const gui = new GUI()
+
 
 // Canvas
 const canvas = document.querySelector('canvas.webgl')
@@ -29,7 +28,7 @@ const axesHelper = new THREE.AxesHelper(5)
  * Textures
  */
 const textureLoader = new THREE.TextureLoader()
-const matcapTexture = textureLoader.load('/textures/matcaps/1.png')
+const matcapTexture = textureLoader.load('/textures/matcaps/2.png')
 matcapTexture.colorSpace = THREE.SRGBColorSpace
 console.log(matcapTexture)
 
@@ -69,7 +68,7 @@ fontLoader.load(
             }
         );
         textGeometry.center();
-        const textMaterial = new THREE.MeshMatcapMaterial({ matcap: matcapTexture8 });
+        const textMaterial = new THREE.MeshMatcapMaterial({ matcap: matcapTexture5 });
         text = new THREE.Mesh(textGeometry, textMaterial);
         scene.add(text);
 
@@ -120,7 +119,7 @@ fontLoader.load(
         for (let i = 0; i < 400; i++) {
             const sphere = new THREE.Mesh(
                 new THREE.SphereGeometry(0.1, 32, 32),
-                new THREE.MeshMatcapMaterial({matcap: matcapTexture2})
+                new THREE.MeshMatcapMaterial({matcap: matcapTexture3})
             )
             sphere.position.x = (Math.random() - 0.5) * 50
             sphere.position.y = (Math.random() - 0.5) * 50
@@ -174,9 +173,9 @@ window.addEventListener('resize', () => {
  */
 // Camera
 const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 100);
-camera.position.x = -4;
-camera.position.y = 4;
-camera.position.z = 6;
+camera.position.x = 0;
+camera.position.y = -1;
+camera.position.z = 12;
 scene.add(camera);
 
 
