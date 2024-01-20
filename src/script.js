@@ -24,6 +24,7 @@ const axesHelper = new THREE.AxesHelper(5)
 //scene.add(axesHelper)
 
 
+
 /**
  * Textures
  */
@@ -40,12 +41,15 @@ const matcapTexture6 = textureLoader.load('/textures/matcaps/6.png')
 const matcapTexture7 = textureLoader.load('/textures/matcaps/7.png')
 const matcapTexture8 = textureLoader.load('/textures/matcaps/8.png')
 
+
 const items = [];
 
 /**
  * Fonts
  */
 const fontLoader = new FontLoader()
+
+let text;
 
 fontLoader.load(
     '/fonts/helvetiker_regular.typeface.json',
@@ -63,25 +67,22 @@ fontLoader.load(
                 bevelOffset: 0,
                 bevelSegments: 4
             }
-        )
-        textGeometry.center()
-        const textMaterial = new THREE.MeshMatcapMaterial()
-        textMaterial.matcap = matcapTexture8
-        textMaterial.flatShading = false
-        //textMaterial.wireframe = true
-        const text = new THREE.Mesh(textGeometry, textMaterial)
-        scene.add(text)
+        );
+        textGeometry.center();
+        const textMaterial = new THREE.MeshMatcapMaterial({ matcap: matcapTexture8 });
+        text = new THREE.Mesh(textGeometry, textMaterial);
+        scene.add(text);
 
         // 100 cubes that will move around the screen store in array outside for loop
 
-        for (let i = 0; i < 100; i++) {
+        for (let i = 0; i < 400; i++) {
             const cube = new THREE.Mesh(
-                new THREE.BoxGeometry(0.1, 0.1, 0.1),
+                new THREE.BoxGeometry(0.3, 0.3, 0.3),
                 new THREE.MeshMatcapMaterial({matcap: matcapTexture5})
             )
-            cube.position.x = (Math.random() - 0.5) * 10
-            cube.position.y = (Math.random() - 0.5) * 10
-            cube.position.z = (Math.random() - 0.5) * 10
+            cube.position.x = (Math.random() - 0.5) * 50
+            cube.position.y = (Math.random() - 0.5) * 50
+            cube.position.z = (Math.random() - 0.5) * 50
 
             // Assign a random velocity
             cube.velocity = new THREE.Vector3(
@@ -94,14 +95,14 @@ fontLoader.load(
             items.push(cube)
         }
         // 100 pyramids like the ones above store in array outside for loop
-        for (let i = 0; i < 100; i++) {
+        for (let i = 0; i < 400; i++) {
             const pyramid = new THREE.Mesh(
                 new THREE.ConeGeometry(0.1, 0.1, 4),
                 new THREE.MeshMatcapMaterial({matcap: matcapTexture8})
             )
-            pyramid.position.x = (Math.random() - 0.5) * 10
-            pyramid.position.y = (Math.random() - 0.5) * 10
-            pyramid.position.z = (Math.random() - 0.5) * 10
+            pyramid.position.x = (Math.random() - 0.5) * 50
+            pyramid.position.y = (Math.random() - 0.5) * 50
+            pyramid.position.z = (Math.random() - 0.5) * 50
 
             // Assign a random velocity
             pyramid.velocity = new THREE.Vector3(
@@ -116,14 +117,14 @@ fontLoader.load(
         }
 
         // 100 spheres like the ones above
-        for (let i = 0; i < 100; i++) {
+        for (let i = 0; i < 400; i++) {
             const sphere = new THREE.Mesh(
                 new THREE.SphereGeometry(0.1, 32, 32),
                 new THREE.MeshMatcapMaterial({matcap: matcapTexture2})
             )
-            sphere.position.x = (Math.random() - 0.5) * 10
-            sphere.position.y = (Math.random() - 0.5) * 10
-            sphere.position.z = (Math.random() - 0.5) * 10
+            sphere.position.x = (Math.random() - 0.5) * 50
+            sphere.position.y = (Math.random() - 0.5) * 50
+            sphere.position.z = (Math.random() - 0.5) * 50
 
             // Assign a random velocity
             sphere.velocity = new THREE.Vector3(
@@ -157,39 +158,37 @@ const sizes = {
 
 window.addEventListener('resize', () => {
     // Update sizes
-    sizes.width = window.innerWidth
-    sizes.height = window.innerHeight
+    sizes.width = window.innerWidth;
+    sizes.height = window.innerHeight;
 
     // Update camera
-    camera.aspect = sizes.width / sizes.height
-    camera.updateProjectionMatrix()
+    camera.aspect = sizes.width / sizes.height;
+    camera.updateProjectionMatrix();
 
     // Update renderer
-    renderer.setSize(sizes.width, sizes.height)
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
-})
-
+    renderer.setSize(sizes.width, sizes.height);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+});
 /**
  * Camera
  */
-// Base camera
+// Camera
+const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 100);
+camera.position.x = -4;
+camera.position.y = 4;
+camera.position.z = 6;
+scene.add(camera);
 
 
-const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 100)
-camera.position.x = -4
-camera.position.y = 4
-camera.position.z = 6
-scene.add(camera)
 
-
-let mouseX = 0;
-let mouseY = 0;
+// Mouse movement
+let mouseX = 0, mouseY = 0;
 const windowHalfX = window.innerWidth / 2;
 const windowHalfY = window.innerHeight / 2;
 
 function onDocumentMouseMove(event) {
-    mouseX = (event.clientX - windowHalfX) / 100;
-    mouseY = (event.clientY - windowHalfY) / 100;
+    mouseX = (event.clientX - windowHalfX) / windowHalfX; // Normalized between -1 and 1
+    mouseY = (event.clientY - windowHalfY) / windowHalfY; // Normalized between -1 and 1
 }
 
 document.addEventListener('mousemove', onDocumentMouseMove, false);
@@ -198,11 +197,12 @@ document.addEventListener('mousemove', onDocumentMouseMove, false);
 /**
  * Renderer
  */
+// Renderer
 const renderer = new THREE.WebGLRenderer({
     canvas: canvas
-})
-renderer.setSize(sizes.width, sizes.height)
-renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+});
+renderer.setSize(sizes.width, sizes.height);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
 /**
  * Animate
@@ -235,8 +235,10 @@ const tick = () => {
     camera.rotation.x += (-mouseY - camera.rotation.x) * 0.05;
 
 
-        // Update camera position
-        //updateCameraPosition(elapsedTime);
+    if (text) {
+        text.rotation.y += 0.001; // Adjust this value for different speed
+        text.rotation.x += 0.001; // You can comment this out if you don't want rotation on the x-axis
+    }
 
     // Render
     renderer.render(scene, camera)
